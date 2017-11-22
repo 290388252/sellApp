@@ -26,9 +26,9 @@ export default {
   data () {
     return {
       msg: 'Welcome to My Vue.js App @CharlieMasterPuppet'
-    }
+    };
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
