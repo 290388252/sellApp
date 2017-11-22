@@ -1,19 +1,15 @@
 <template>
-    <div>
-        {{msg}}
+    <div class="header">
+      <img src="../../assets/logo.png" alt="">
     </div>
 </template>
 
-<style>
+<style lang="stylus" rel="stylesheet/stylus">
     body {
         background-color: #ff0000;
     }
 </style>
 
-<script>
-    export default{
-        data () {
-            return {msg: '这个是Home模板页'}
-        }
-    }
+<script type="text/ecmascript-6">
+    export default {};
 </script>

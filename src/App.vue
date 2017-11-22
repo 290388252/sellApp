@@ -1,6 +1,14 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png" alt="">
+    <div class="header">
+      <img src="./assets/logo.png" alt="">
+    </div>
+    <div class="tab">
+      i am tab
+    </div>
+    <div class="content">
+      i am content
+    </div>
   </div>
 </template>
 
