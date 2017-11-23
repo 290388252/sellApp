@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import goods from '../components/goods/goods';
 import ratings from '../components/ratings/ratings';
 import seller from '../components/seller/seller';
+import '../common/stylus/index.styl';
 
 Vue.use(Router);
 const routes = [
@@ -11,7 +12,8 @@ const routes = [
   {path: '/seller', name: seller, component: seller}
 ];
 const router = new Router({
-  routes
+  routes,
+  linkActiveClass: 'active'
 });
 router.push('/goods');
 export default router;
