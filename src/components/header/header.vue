@@ -1,12 +1,12 @@
 <template>
     <div class="header">
-      <img src="../../assets/logo.png" alt="">
+      I am header
     </div>
 </template>
 
 <style lang="stylus" rel="stylesheet/stylus">
     body {
-        background-color: #ff0000;
+        background-color: #fff;
     }
 </style>
 
