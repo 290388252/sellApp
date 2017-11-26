@@ -17,12 +17,28 @@
             <span class="text">{{seller.supports[0].description}}</span>
           </div>
         </div>
-        <div v-if="seller.supports" class="support-count">
+        <div v-if="seller.supports" class="support-count" @click="showDetail">
           <span class="count">{{seller.supports.length}}个</span>
           <i class="icon-keyboard_arrow_right"></i>
         </div>
       </div>
-      <div class="bullentin-wrapper"></div>
+      <div class="bulletin-wrapper" @click="showDetail">
+        <span class="bulletin-title"></span><span class="bulletin-text">{{seller.bulletin}}</span>
+        <i class="icon-keyboard_arrow_right"></i>
+      </div>
+      <div class="background">
+        <img :src="seller.avatar" alt="" width="100%" height="100%">
+      </div>
+      <div v-show="detailShow" class="detail">
+        <div class="detail-wrapper clearfix">
+          <div class="detail-main">
+            <h1 class="name">{{seller.name}}</h1>
+          </div>
+        </div>
+        <div class="detail-close" @click="hideDetail">
+          <i class="icon-close"></i>
+        </div>
+      </div>
     </div>
 </template>
 
@@ -30,8 +46,9 @@
   @import "../../common/stylus/mixin.styl";
 
     .header
+      position: relative
       color: #fff
-      background blueviolet
+      overflow hidden
       .content-wrapper
         padding: 24px 12px 18px 24px
         position relative
@@ -104,6 +121,68 @@
             font-size: 10px
             margin-left: 2px
             line-height: 2
+      .bulletin-wrapper
+        position: relative
+        height 28px
+        line-height: 28px
+        padding 0 12px 0 12px
+        white-space: nowrap
+        text-overflow ellipsis
+        overflow hidden
+        background: rgba(7, 17, 27, 0.2)
+        .bulletin-title
+          display inline-block
+          width: 22px
+          height: 12px
+          bg-image('bulletin')
+          background-size 22px 12px
+          background-repeat no-repeat
+          margin-top: 7px
+        .bulletin-text
+          margin: 0 4px
+          font-size 10px
+        .icon-keyboard_arrow_right
+          position: absolute
+          font-size 10px
+          right 8px
+          top: 8px
+      .background
+        position absolute
+        top: 0
+        left: 0
+        width 100%
+        height: 100%
+        z-index -1
+        filter: blur(10px)
+        background: rgba(7, 17, 27, 0.5)
+      .detail
+        position: fixed
+        z-index: 100
+        top: 0
+        left 0
+        width: 100%
+        height: 100%
+        overflow auto
+        background: rgba(7, 17, 27, 0.7)
+        .detail-wrapper
+          min-height 100%
+          width 100%
+          .detail-main
+            margin-top: 64px
+            padding-bottom: 64px
+            .name
+              font-size 16px
+              text-align center
+              font-weight 700
+              color: rgb(255, 255, 255)
+              line-height 32px
+        .detail-close
+          position relative
+          width 32px
+          height 32px
+          margin -54px auto 0 auto
+          clear: both
+          font-size: 32px
 </style>
 
 <script type="text/ecmascript-6">
@@ -112,6 +191,19 @@
             seller: {
                 type: Object
             }
+        },
+        data () {
+            return {
+              detailShow: false
+            };
+        },
+        methods: {
+          showDetail () {
+            this.detailShow = true;
+          },
+          hideDetail () {
+            this.detailShow = false;
+          }
         },
         created() {
             this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];

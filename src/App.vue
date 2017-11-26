@@ -20,10 +20,10 @@
   import header from './components/header/header.vue';
   const ERR_OK = 0;
   export default{
-    data() {
-         return {
-           seller: {}
-      };
+    data () {
+           return {
+             seller: {}
+           };
     },
     created() {
         this.$http.get('api/seller').then((response) => {
