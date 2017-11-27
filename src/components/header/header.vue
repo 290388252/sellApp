@@ -2,7 +2,7 @@
     <div class="header">
       <div class="content-wrapper">
         <div class="avatar">
-          <img :src="seller.avatar" alt="" width="64" height="64">
+          <img class="avatar-img" :src="seller.avatar" alt="" width="64" height="64">
         </div>
         <div class="content">
           <div class="title">
@@ -29,16 +29,40 @@
       <div class="background">
         <img :src="seller.avatar" alt="" width="100%" height="100%">
       </div>
-      <div v-show="detailShow" class="detail">
+      <transition name="fade">
+        <div v-show="detailShow" class="detail">
         <div class="detail-wrapper clearfix">
           <div class="detail-main">
             <h1 class="name">{{seller.name}}</h1>
+            <div class="star">
+              <star :size="48" :score="seller.score"></star>
+            </div>
+            <div class="title">
+              <div class="line"></div>
+              <div class="text">优惠信息</div>
+              <div class="line"></div>
+            </div>
+            <ul v-if="seller.supports" class="supports">
+              <li class="support-item" v-for="(item, index) in seller.supports">
+                <span class="icon" :class="classMap[seller.supports[index].type]"></span>
+                <span class="text">{{seller.supports[index].description}}</span>
+              </li>
+            </ul>
+            <div class="title">
+              <div class="line"></div>
+              <div class="text">商家公告</div>
+              <div class="line"></div>
+            </div>
+            <p class="seller-bulletin">
+              {{seller.bulletin}}
+            </p>
           </div>
         </div>
         <div class="detail-close" @click="hideDetail">
           <i class="icon-close"></i>
         </div>
       </div>
+      </transition>
     </div>
 </template>
 
@@ -56,7 +80,8 @@
         .avatar
           display: inline-block
           vertical-align top
-          border-radius 2px
+          .avatar-img
+            border-radius 4px
         .content
           margin-top 2px
           display: inline-block
@@ -104,7 +129,6 @@
            .text
               line-height: 12px
               font-size: 10px
-
         .support-count
           position absolute
           right: 12px
@@ -163,7 +187,14 @@
         width: 100%
         height: 100%
         overflow auto
+        opacity 1
+        backdrop-filter:blur(10px)
         background: rgba(7, 17, 27, 0.7)
+        &.fade-enter-active, &.fade-leave-active
+          transition: all .5s
+        &.fade-enter, &.fade-leave-active
+          opacity 0
+          background: rgba(7, 17, 27, 0)
         .detail-wrapper
           min-height 100%
           width 100%
@@ -176,6 +207,60 @@
               font-weight 700
               color: rgb(255, 255, 255)
               line-height 32px
+            .star
+              text-align center
+              font-weight 700
+              margin-top 16px
+              margin-bottom 28px
+            .title
+              display: flex
+              width 80%
+              margin 30px auto 24px auto
+              .line
+                flex: 1
+                position: relative
+                top: -8px
+                border-bottom 1px solid rgba(255, 255, 255, 0.2)
+              .text
+                font-weight 700
+                padding 0 12px 0 12px
+            .supports
+              width 80%
+              margin: 0 auto
+              font-size: 12px
+              .support-item
+                padding: 0 12px
+                margin-bottom: 12px
+                font-size 0
+                &:last-child
+                  margin-bottom 0
+                .icon
+                  display: inline-block
+                  width: 16px
+                  height: 16px
+                  background-size 16px 16px
+                  background-repeat no-repeat
+                  vertical-align: top
+                  margin-right 6px
+                  &.decrease
+                    bg-image('decrease_2')
+                  &.discount
+                    bg-image('discount_2')
+                  &.guarantee
+                    bg-image('guarantee_2')
+                  &.invoice
+                    bg-image('invoice_2')
+                  &.special
+                    bg-image('special_2')
+                .text
+                  line-height 16px
+                  font-size 12px
+            .seller-bulletin
+              margin 0 36px 0 36px
+              line-height 24px
+              font-weight 200
+              font-size 13px
+              text-indent 2em
         .detail-close
           position relative
           width 32px
@@ -186,6 +271,7 @@
 </style>
 
 <script type="text/ecmascript-6">
+  import star from '../../components/star/star.vue';
     export default {
         props: {
             seller: {
@@ -207,6 +293,9 @@
         },
         created() {
             this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
+        },
+        components: {
+            star
         }
     };
 </script>
