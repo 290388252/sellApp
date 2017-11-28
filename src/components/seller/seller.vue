@@ -1,16 +1,11 @@
 <template>
     <div>
-        {{msg}}
     </div>
 </template>
 
 <style>
 </style>
 
-<script>
-    export default{
-        data () {
-            return {msg: 'I am seller'};
-        }
-    };
+<script type="text/ecmascript-6">
+  export default{};
 </script>
