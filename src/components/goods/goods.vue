@@ -29,6 +29,9 @@
                   <span class="now">￥{{food.price}}</span>
                   <span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol :food="food"></cartcontrol>
+                </div>
               </div>
             </li>
           </ul>
@@ -139,11 +142,16 @@
               color rgb(147, 153, 159)
               text-decoration: line-through
               font-size 10px
+          .cartcontrol-wrapper
+            position: absolute
+            right: 0
+            bottom 12px
 </style>
 
 <script type="text/ecmascript-6">
     import BScroll from 'better-scroll';
     import shopcart from '../shopcart/shopcart.vue';
+    import cartcontrol from '../cartcontrol/carcontrol.vue';
 
     const ERR_OK = 0;
     export default{
@@ -226,7 +234,8 @@
           }
         },
         components: {
-            shopcart
+            shopcart,
+            cartcontrol
         }
     };
 </script>
