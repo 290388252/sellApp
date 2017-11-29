@@ -2,7 +2,7 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li v-for="(item, index) in goods" class="menu-item" :class="{'current':currentIndex === index}">
+        <li v-for="(item, index) in goods" class="menu-item" :class="{'current':currentIndex === index}" @click="selectMenu(index, $event)" ref="menuList">
           <span class="text border-1px">
             <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
           </span>
@@ -11,7 +11,7 @@
     </div>
     <div class="foods-wrapper" ref="foodWrapper">
       <ul>
-        <li v-for="item in goods" class="food-list food-list-hook">
+        <li v-for="(item, index) in goods" class="food-list food-list-hook" :class="{'current':currentIndex === index}">
           <h1 class="title">{{item.name}}</h1>
           <ul>
             <li v-for="food in item.foods" class="food-item border-1px">
@@ -35,6 +35,7 @@
         </li>
       </ul>
     </div>
+    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
@@ -62,9 +63,10 @@
           z-index 10
           margin-top: -1px
           background #fff
-          font-weight 700
           .text
             border-none()
+            font-weight 700
+            font-size 13px
         .icon
           display inline-block
           vertical-align top
@@ -141,6 +143,8 @@
 
 <script type="text/ecmascript-6">
     import BScroll from 'better-scroll';
+    import shopcart from '../shopcart/shopcart.vue';
+
     const ERR_OK = 0;
     export default{
         props: {
@@ -183,14 +187,18 @@
         },
         methods: {
           _initScroll() {
-              this.menuScroll = new BScroll(this.$refs.menuWrapper, {});
+              this.menuScroll = new BScroll(this.$refs.menuWrapper, {
+                  click: true
+              });
 
               this.foodScroll = new BScroll(this.$refs.foodWrapper, {
+                  click: true,
                   probeType: 3
               });
 
               this.foodScroll.on('scroll', (pos) => {
-                  this.scrollY = Math.abs(Math.round(pos.y));
+                  // 由于第二行差一px高度
+                  this.scrollY = (Math.abs(Math.round(pos.y)) + 1);
               });
           },
           _calculateHeight() {
@@ -202,7 +210,23 @@
                   height += item.clientHeight;
                   this.listHeight.push(height);
               }
+          },
+          selectMenu (index, event) {
+              if (!event._constructed) {
+                  return;
+              }
+              let foodList = this.$refs.foodWrapper.getElementsByClassName('food-list-hook');
+              let el = foodList[index];
+              this.foodScroll.scrollToElement(el, 300);
+          },
+          _followScroll(index) {
+            let menuList = this.$refs.menuList;
+            let el = menuList[index];
+            this.meunScroll.scrollToElement(el, 300, 0, -100);
           }
+        },
+        components: {
+            shopcart
         }
     };
 </script>
