@@ -149,18 +149,18 @@
             payDesc() {
                 if (this.totalPrice === 0) {
                    return `￥${this.minPrice}元起送`;
-                }else if (this.totalPrice > 0 && this.totalPrice < 20) {
+                } else if (this.totalPrice > 0 && this.totalPrice < 20) {
                   let diff = this.minPrice - this.totalPrice;
                   return `还差￥${diff}元起送`;
-                }else if (this.totalPrice >= 20) {
+                } else if (this.totalPrice >= 20) {
                   return `去结算`;
                 }
             },
             payClass() {
                 if (this.totalPrice < this.minPrice) {
-                    return 'not-enough'
-                }else {
-                  return 'enough'
+                    return 'not-enough';
+                } else {
+                  return 'enough';
                 }
             }
         }
