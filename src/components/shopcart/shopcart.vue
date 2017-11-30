@@ -1,5 +1,6 @@
 <template>
-  <div class="shopcart">
+  <div>
+    <div class="shopcart">
     <div class="content" @click="toggleList">
       <div class="content-left">
         <div class="logo-wrapper">
@@ -11,7 +12,7 @@
         <div class="price" :class="{'highlight':totalCount>0}">￥{{totalPrice}}</div>
         <div class="desc">另需配送费 {{deliveryPrice}} 元</div>
       </div>
-      <div class="content-right">
+      <div class="content-right" @click.stop.prevent="pay">
         <div class="pay" :class="payClass">
           {{payDesc}}
         </div>
@@ -30,9 +31,9 @@
       <div class="shopcart-list" v-show="listShow">
         <div class="list-header">
           <div class="title">购物车</div>
-          <div class="empty">清空</div>
+          <div class="empty" @click="cleanCart">清空</div>
         </div>
-        <div class="list-content">
+        <div class="list-content" ref="listContent">
           <ul>
             <li class="food" v-for="food in selectFoods">
               <span class="name">{{food.name}}</span>
@@ -48,9 +49,14 @@
       </div>
     </transition>
   </div>
+    <transition name="fade">
+      <div class="list-mask" @click="hideList" v-show="listShow"></div>
+    </transition>
+  </div>
 </template>
 
 <style lang="stylus" rel="stylesheet/stylus">
+  @import "../../common/stylus/mixin.styl";
   .shopcart
     position: fixed
     left 0
@@ -151,6 +157,7 @@
           transition: all .8s linear
     .shopcart-list
       position absolute
+      background white
       top: 0
       left 0
       z-index -1
@@ -160,10 +167,66 @@
         transition: all 0.5s
       &.fold-enter, &.fold-leave-active
         transform: translate3d(0, 0, 0)
+      .list-header
+        height 40px
+        line-height 40px
+        padding: 0 18px
+        background #f3f5f7
+        font-size 14px
+        border-bottom 1px solid rgba(7, 17, 21, 0.1)
+        .title
+          float: left
+          color: rbg(7, 17, 21)
+        .empty
+          float: right
+          color: rgb(0, 160, 220)
+      .list-content
+        padding:0 18px
+        max-height 217px
+        overflow hidden
+        .food
+          position: relative
+          padding 12px 0
+          -webkit-box-sizing: border-box
+          -moz-box-sizing: border-box
+          box-sizing: border-box
+          border-1px(rgba(7, 17, 21, 0.1))
+          .name
+            line-height 24px
+            font-size 14px
+            color: rgb(7, 17, 27)
+          .price
+            position: absolute
+            right: 90px
+            bottom: 12px
+            line-height 24px
+            font-size 14px
+            font-weight 700
+            color: rgb(240, 21, 21)
+          .cartcontrol-wrapper
+            position: absolute
+            right: 0
+            bottom 6px
+
+  .list-mask
+    position fixed
+    top 0
+    left 0
+    z-index 40
+    width 100%
+    height 100%
+    background: rgba(7, 17, 27, 0.6)
+    opacity 1
+    &.fade-enter-active, &.fade-leave-active
+      transition all .5s
+    &.fade-enter, &.fade-leave-active
+      opacity: 0
+      background: rgba(7, 17, 27, 0)
 </style>
 
 <script type="text/ecmascript-6">
   import cartcontrol from '../cartcontrol/carcontrol.vue';
+  import BScroll from 'better-scroll';
   export default{
     data () {
       return {
@@ -237,11 +300,22 @@
         }
       },
       listShow() {
-          if (!this.totalCount){
+          if (!this.totalCount) {
               this.fold = true;
               return false;
           }
           let show = !this.fold;
+          if (show) {
+            this.$nextTick(() => {
+              if (!this.scroll) {
+                this.scroll = new BScroll(this.$refs.listContent, {
+                  click: true
+                });
+              } else {
+                this.scroll.refresh();
+              }
+            });
+          }
           return show;
       }
     },
@@ -298,10 +372,24 @@
         }
       },
       toggleList() {
-          if(!this.totalCount){
+          if (!this.totalCount) {
               return;
           }
           this.fold = !this.fold;
+      },
+      cleanCart() {
+        this.selectFoods.forEach((food) => {
+          food.count = 0;
+        });
+      },
+      hideList() {
+        this.fold = true;
+      },
+      pay() {
+        if (this.totalPrice < this.minPrice) {
+          return;
+        }
+        window.alert(`支付${this.totalPrice}元`);
       }
     },
     components: {
