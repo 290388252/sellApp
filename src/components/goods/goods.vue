@@ -26,11 +26,10 @@
                   <span>好评率{{food.rating}}%</span>
                 </div>
                 <div class="price">
-                  <span class="now">￥{{food.price}}</span>
-                  <span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
+                  <span class="now">￥{{food.price}}</span><span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food"></cartcontrol>
+                  <cartcontrol :food="food" @add="addFood"></cartcontrol>
                 </div>
               </div>
             </li>
@@ -38,7 +37,7 @@
         </li>
       </ul>
     </div>
-    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
@@ -177,6 +176,17 @@
                     }
                 }
                 return 0;
+            },
+            selectFoods() {
+                let foods = [];
+                this.goods.forEach((good) => {
+                    good.foods.forEach(food => {
+                      if (food.count) {
+                          foods.push(food);
+                      }
+                    });
+                });
+                return foods;
             }
         },
         created () {
@@ -194,6 +204,14 @@
           this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
         },
         methods: {
+          addFood(target) {
+            this._drop(target);  // 传递 target
+          },
+          _drop(target) {
+              this.$nextTick(() => {
+                this.$refs.shopcart.drop(target);
+              });
+          },
           _initScroll() {
               this.menuScroll = new BScroll(this.$refs.menuWrapper, {
                   click: true
