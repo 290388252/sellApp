@@ -17,11 +17,14 @@
             <span class="now">￥{{food.price}}</span>
             <span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
           </div>
+          <div class="cartcontrol-wrapper">
+            <cartcontrol @add="addFood" :food="food"></cartcontrol>
+          </div>
+          <transition name="fade">
+            <div @click="addFirst" class="buy" v-show="!food.count || food.count === 0">加入购物车</div>
+          </transition>
         </div>
-        <div class="cartcontrol-wrapper">
-          <cartcontrol :food="food"></cartcontrol>
-        </div>
-        <div @click="addFirst" class="buy" v-show="!food.count || food.count === 0">加入购物车</div>
+        <split></split>
       </div>
     </div>
   </transition>
@@ -57,6 +60,7 @@
         left 15px
         color white
     .content
+      position: relative;
       margin-top 18px
       margin-left 18px
       .title
@@ -103,11 +107,18 @@
       text-align center
       background rgb(0, 160, 220)
       z-index 10
+      opacity 1
+      &.fade-enter-active, &.fade-leave-active
+        transition all 0.2s
+      &.fade-enter, &.fade-leave-active
+        opacity: 0
+        z-index -1
 </style>
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll';
   import cartcontrol from '../cartcontrol/carcontrol.vue';
+  import split from '../split/split.vue';
   import Vue from 'vue';
     export default {
         props: {
@@ -140,16 +151,16 @@
                 if (!event._constructed) {
                     return;
                 }
-                if (!this.food.count) {
-                  Vue.set(this.food, 'count', 1);
-                } else {
-                  this.food.count++;
-                }
                 this.$emit('add', event.target);
-              }
+                Vue.set(this.food, 'count', 1);
+              },
+            addFood(target) {
+               this.$emit('add', target);
+              },
         },
         components: {
-            cartcontrol
+            cartcontrol,
+            split
         }
     };
 </script>
