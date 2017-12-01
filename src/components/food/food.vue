@@ -29,7 +29,11 @@
           <h1 class="title">商品信息</h1>
           <p class="text">{{food.info}}</p>
         </div>
-        <split v-show="food.info"></split>
+        <split></split>
+        <div class="ratings">
+          <h1 class="title">商品评价</h1>
+          <ratingselect :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+        </div>
       </div>
     </div>
   </transition>
@@ -118,7 +122,7 @@
         &.fade-enter, &.fade-leave-active
           opacity: 0
           z-index -1
-    .info
+    .info, .ratings
       margin 18px 18px 18px 14px
       .text
         margin-left 8px
@@ -133,7 +137,11 @@
   import BScroll from 'better-scroll';
   import cartcontrol from '../cartcontrol/carcontrol.vue';
   import split from '../split/split.vue';
+  import ratingselect from '../ratingselect/ratingselect.vue';
   import Vue from 'vue';
+  const ALL = 2;
+//  const POSITIVE = 0;
+//  const NEGATIVE = 1;
     export default {
         props: {
             food: {
@@ -142,12 +150,21 @@
         },
         data() {
             return {
-                showFlag: false
+                showFlag: false,
+                selectType: ALL,
+                onlyContent: false,
+                desc: {
+                  all: '全部',
+                  positive: '推荐',
+                  negative: '吐槽'
+                }
             };
         },
         methods: {
             show() {
                 this.showFlag = true;
+                this.selectType = ALL;
+                this.onlyContent = true;
                 this.$nextTick(() => {
                    if (!this.scroll) {
                        this.scroll = new BScroll(this.$refs.food, {
@@ -170,11 +187,12 @@
               },
             addFood(target) {
                this.$emit('add', target);
-              },
+              }
         },
         components: {
             cartcontrol,
-            split
+            split,
+            ratingselect
         }
     };
 </script>
