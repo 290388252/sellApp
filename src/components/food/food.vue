@@ -1,6 +1,30 @@
 <template>
-    <div class="food">
+  <transition name="move">
+    <div class="food" v-show="showFlag" ref="food">
+      <div class="food-content">
+        <div class="image-header">
+          <img :src="food.image" alt="">
+          <div class="back">
+            <i class="icon-arrow_lift" @click="hide"></i>
+          </div>
+        </div>
+        <div class="content">
+          <div class="title">{{food.name}}</div>
+          <div class="detail">
+            月售{{food.sellCount}}份,好评率{{food.rating}}%
+          </div>
+          <div class="price">
+            <span class="now">￥{{food.price}}</span>
+            <span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
+          </div>
+        </div>
+        <div class="cartcontrol-wrapper">
+          <cartcontrol :food="food"></cartcontrol>
+        </div>
+        <div @click="addFirst" class="buy" v-show="!food.count || food.count === 0">加入购物车</div>
+      </div>
     </div>
+  </transition>
 </template>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -8,8 +32,124 @@
     position: fixed
     left: 0
     top: 0
+    width 100%
+    bottom 45px
+    z-index 30
+    background white
+    transform translate3d(0, 0, 0)
+    &.move-enter-active, &.move-leave-active
+      transition all .2s linear
+    &.move-enter, &.move-leave-active
+      transform translate3d(100%, 0, 0)
+    .image-header
+      position relative
+      width 100%
+      height 50vh
+      img
+       position absolute
+       top: 0
+       left 0
+       width: 100%
+       height: 100%
+      .back
+        position: absolute
+        top: 20px
+        left 15px
+        color white
+    .content
+      margin-top 18px
+      margin-left 18px
+      .title
+        font-size 14px
+        font-weight 700
+        color: rgb(7, 17, 27)
+        line-height 14px
+      .detail
+        font-size 10px
+        color: rgb(147, 153, 159)
+        margin-top 8px
+        line-height 10px
+      .price
+        margin-top 10px
+        margin-bottom 18px
+        .now
+          color: red
+          font-size 14px
+          font-weight 700
+          line-height 24px
+        .old
+          color: gray
+          font-size 10px
+          font-weight 700
+          line-height 24px
+          text-decoration: line-through
+          padding-left 6px
+    .cartcontrol-wrapper
+      position: absolute
+      right: 18px
+      bottom -5px
+    .buy
+      position: absolute
+      right: 18px
+      bottom 3px
+      color white
+      border-radius 12px
+      font-size 10px
+      height 24px
+      line-height: 24px
+      box-sizing border-box
+      padding-left 12px
+      padding-right 12px
+      text-align center
+      background rgb(0, 160, 220)
+      z-index 10
 </style>
 
 <script type="text/ecmascript-6">
-    export default {};
+  import BScroll from 'better-scroll';
+  import cartcontrol from '../cartcontrol/carcontrol.vue';
+  import Vue from 'vue';
+    export default {
+        props: {
+            food: {
+                type: Object
+            }
+        },
+        data() {
+            return {
+                showFlag: false
+            };
+        },
+        methods: {
+            show() {
+                this.showFlag = true;
+                this.$nextTick(() => {
+                   if (!this.scroll) {
+                       this.scroll = new BScroll(this.$refs.food, {
+                           click: true
+                       });
+                   } else {
+                       this.scroll.refresh();
+                   }
+                });
+            },
+            hide() {
+                this.showFlag = false;
+            },
+            addFirst(event) {
+                if (!event._constructed) {
+                    return;
+                }
+                if (!this.food.count) {
+                  Vue.set(this.food, 'count', 1);
+                } else {
+                  this.food.count++;
+                }
+                this.$emit('add', event.target);
+              }
+        },
+        components: {
+            cartcontrol
+        }
+    };
 </script>

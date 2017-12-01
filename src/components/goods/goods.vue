@@ -29,8 +29,8 @@
                     <span>好评率{{food.rating}}%</span>
                   </div>
                   <div class="price">
-                    <span class="now">￥{{food.price}}</span><span v-show="food.oldPrice"
-                                                                  class="old">￥{{food.oldPrice}}</span>
+                    <span class="now">￥{{food.price}}</span>
+                    <span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
                     <cartcontrol :food="food" @add="addFood"></cartcontrol>
@@ -44,7 +44,7 @@
       <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice"
                 :min-price="seller.minPrice"></shopcart>
     </div>
-    <food :food="selectedFood"></food>
+    <food :food="selectedFood" ref="food"></food>
   </div>
 </template>
 
@@ -259,6 +259,7 @@
           return;
         }
         this.selectedFood = food;
+        this.$refs.food.show();
       },
       _followScroll(index) {
         let menuList = this.$refs.menuList;
