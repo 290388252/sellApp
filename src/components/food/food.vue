@@ -24,7 +24,12 @@
             <div @click="addFirst" class="buy" v-show="!food.count || food.count === 0">加入购物车</div>
           </transition>
         </div>
-        <split></split>
+        <split v-show="food.info"></split>
+        <div class="info" v-show="food.info">
+          <h1 class="title">商品信息</h1>
+          <p class="text">{{food.info}}</p>
+        </div>
+        <split v-show="food.info"></split>
       </div>
     </div>
   </transition>
@@ -88,31 +93,40 @@
           line-height 24px
           text-decoration: line-through
           padding-left 6px
-    .cartcontrol-wrapper
-      position: absolute
-      right: 18px
-      bottom -5px
-    .buy
-      position: absolute
-      right: 18px
-      bottom 3px
-      color white
-      border-radius 12px
-      font-size 10px
-      height 24px
-      line-height: 24px
-      box-sizing border-box
-      padding-left 12px
-      padding-right 12px
-      text-align center
-      background rgb(0, 160, 220)
-      z-index 10
-      opacity 1
-      &.fade-enter-active, &.fade-leave-active
-        transition all 0.2s
-      &.fade-enter, &.fade-leave-active
-        opacity: 0
-        z-index -1
+      .cartcontrol-wrapper
+        position: absolute
+        right: 18px
+        bottom -5px
+      .buy
+        position: absolute
+        right: 18px
+        bottom 3px
+        color white
+        border-radius 12px
+        font-size 10px
+        height 24px
+        line-height: 24px
+        box-sizing border-box
+        padding-left 12px
+        padding-right 12px
+        text-align center
+        background rgb(0, 160, 220)
+        z-index 10
+        opacity 1
+        &.fade-enter-active, &.fade-leave-active
+          transition all 0.2s
+        &.fade-enter, &.fade-leave-active
+          opacity: 0
+          z-index -1
+    .info
+      margin 18px 18px 18px 14px
+      .text
+        margin-left 8px
+        margin-right 12px
+        font-size 12px
+        font-weight 200
+        color: rgb(77, 85, 93)
+        line-height 21px
 </style>
 
 <script type="text/ecmascript-6">
