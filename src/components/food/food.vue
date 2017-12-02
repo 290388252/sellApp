@@ -32,7 +32,7 @@
         <split></split>
         <div class="ratings">
           <h1 class="title">商品评价</h1>
-          <ratingselect @select="selectRatings" :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+          <ratingselect @toggle="toggleContent" @select="selectRatings" :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
         </div>
       </div>
     </div>
@@ -193,8 +193,13 @@
                 this.$nextTick(() => {
                   this.scroll.refresh();
                 });
+              },
+              toggleContent() {
+                this.onlyContent = !this.onlyContent;
+                this.$nextTick(() => {
+                  this.scroll.refresh();
+                });
               }
-
         },
         components: {
             cartcontrol,

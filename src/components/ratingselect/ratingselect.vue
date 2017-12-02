@@ -1,11 +1,11 @@
 <template>
     <div class="ratingselect">
       <div class="rating-type">
-        <span @click="select(2, $event)" class="block positive" :class="{'active':selectType===2}">{{desc.all}}<span class="count">57</span></span>
-        <span @click="select(0, $event)" class="block positive" :class="{'active':selectType===0}">{{desc.positive}}<span class="count">57</span></span>
-        <span @click="select(1, $event)" class="block negative" :class="{'active':selectType===1}">{{desc.negative}}<span class="count">57</span></span>
+        <span @click="select(2, $event)" class="block positive" :class="{'active':selectType===2}">{{desc.all}}<span class="count">{{ratings.length}}</span></span>
+        <span @click="select(0, $event)" class="block positive" :class="{'active':selectType===0}">{{desc.positive}}<span class="count">{{positive.length}}</span></span>
+        <span @click="select(1, $event)" class="block negative" :class="{'active':selectType===1}">{{desc.negative}}<span class="count">{{negative.length}}</span></span>
       </div>
-      <div class="switch">
+      <div class="switch" @click="toggleContent">
         <span class="icon-check_circle" :class="{'on':onlyContent}"></span>
         <span class="texts">只看内容的评价</span>
       </div>
@@ -22,6 +22,7 @@
       padding: 8px 12px
       border-radius 2px
       display inline-block
+      font-size 13px
       &.positive
         background rgba(0, 160, 220, .2)
         &.active
@@ -51,8 +52,8 @@
 </style>
 
 <script type="text/ecmascript-6">
-//  const POSITIVE = 0;
-//  const NEGATIVE = 1;
+  const POSITIVE = 0;
+  const NEGATIVE = 1;
   const ALL = 2;
     export default {
       props: {
@@ -81,12 +82,30 @@
           }
         }
       },
+      computed: {
+        positive() {
+          return this.ratings.filter((rating) => {
+            return rating.rateType === POSITIVE;
+          });
+        },
+        negative() {
+          return this.ratings.filter((rating) => {
+            return rating.rateType === NEGATIVE;
+          });
+        }
+      },
       methods: {
         select(type, event) {
           if (!event._constructed) {
             return;
           }
           this.$emit('select', type);
+        },
+        toggleContent(event) {
+          if (!event._constructed) {
+            return;
+          }
+          this.$emit('toggle');
         }
       }
     };
