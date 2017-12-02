@@ -32,7 +32,7 @@
         <split></split>
         <div class="ratings">
           <h1 class="title">商品评价</h1>
-          <ratingselect :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+          <ratingselect @select="selectRatings" :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
         </div>
       </div>
     </div>
@@ -185,9 +185,16 @@
                 this.$emit('add', event.target);
                 Vue.set(this.food, 'count', 1);
               },
-            addFood(target) {
+              addFood(target) {
                this.$emit('add', target);
+              },
+              selectRatings(type) {
+                this.selectType = type;
+                this.$nextTick(() => {
+                  this.scroll.refresh();
+                });
               }
+
         },
         components: {
             cartcontrol,
