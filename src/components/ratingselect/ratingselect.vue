@@ -7,7 +7,7 @@
       </div>
       <div class="switch" @click="toggleContent">
         <span class="icon-check_circle" :class="{'on':onlyContent}"></span>
-        <span class="texts">只看内容的评价</span>
+        <span class="texts">只看有内容的评价</span>
       </div>
     </div>
 </template>
@@ -36,7 +36,7 @@
       .count
         margin-left 8px
   .switch
-    margin 12px 0
+    margin 12px 0 0 0
     padding-bottom 12px
     border-1px(rgba(7, 17, 27, .1))
     .icon-check_circle
@@ -69,7 +69,7 @@
         },
         onlyContent: {
           type: Boolean,
-          default: false
+          default: true
         },
         desc: {
           type: Object,
