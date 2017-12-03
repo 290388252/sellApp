@@ -172,7 +172,6 @@
             line-height 16px
             font-size 12px
             margin-top 6px
-            color: gray
             .icon-thumb_up
               color rgb(0, 160, 220)
         .no-rating
