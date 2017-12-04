@@ -1,58 +1,60 @@
 <template>
   <div class="ratings" ref="ratings">
-    <div class="ratings-content">
-      <div class="ratings-overview">
-        <div class="ratings-overview-left">
-          <h1 class="score">{{seller.score}}</h1>
-          <div class="title">综合评分</div>
-          <div class="rank">高于周边商家{{seller.rankRate}}%</div>
-        </div>
-        <div class="ratings-overview-right">
-          <div class="score-wrapper">
-            <span class="score-title">服务态度</span>
-            <star :size="36" :score="seller.serviceScore"></star>
-            <span class="score">{{seller.serviceScore}}</span>
+    <div>
+      <div class="ratings-content">
+        <div class="ratings-overview">
+          <div class="ratings-overview-left">
+            <h1 class="score">{{seller.score}}</h1>
+            <div class="title">综合评分</div>
+            <div class="rank">高于周边商家{{seller.rankRate}}%</div>
           </div>
-          <div class="score-wrapper">
-            <span class="score-title">商品评分</span>
-            <star class="star" :size="36" :score="seller.foodScore"></star>
-            <span class="score">{{seller.foodScore}}</span>
-          </div>
-          <div class="score-wrapper">
-            <span class="score-title">送达时间</span>
-            <span class="deliveryTime">{{seller.deliveryTime}}分钟</span>
+          <div class="ratings-overview-right">
+            <div class="score-wrapper">
+              <span class="score-title">服务态度</span>
+              <star :size="36" :score="seller.serviceScore"></star>
+              <span class="score">{{seller.serviceScore}}</span>
+            </div>
+            <div class="score-wrapper">
+              <span class="score-title">商品评分</span>
+              <star class="star" :size="36" :score="seller.foodScore"></star>
+              <span class="score">{{seller.foodScore}}</span>
+            </div>
+            <div class="score-wrapper">
+              <span class="score-title">送达时间</span>
+              <span class="deliveryTime">{{seller.deliveryTime}}分钟</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <split></split>
-    <div class="ratings-wrapper">
-      <ratingselect class="ratingselect" @toggle="toggleContent" @select="selectRatings" :selectType="selectType"
-                    :onlyContent="onlyContent" :desc="desc" :ratings="ratings"></ratingselect>
+      <split></split>
+      <div class="ratings-wrapper">
+        <ratingselect class="ratingselect" @toggle="toggleContent" @select="selectRatings" :selectType="selectType"
+                      :onlyContent="onlyContent" :desc="desc" :ratings="ratings"></ratingselect>
 
-      <ul v-show="ratings && ratings.length">
-        <li v-show="needShow(rating.rateType,rating.text)" class="ratings-item" v-for="rating in ratings">
-          <img class="avatars" :src="rating.avatar" width="28" height="28">
-          <div class="users">
-            <span class="names">{{rating.username}}</span>
-            <div class="star_content">
-              <star class="s_star" :size="36" :score="rating.score"></star>
-              <div class="s_content">{{rating.deliveryTime}}分钟送达</div>
+        <ul v-show="ratings && ratings.length">
+          <li v-show="needShow(rating.rateType,rating.text)" class="ratings-item" v-for="rating in ratings">
+            <img class="avatars" :src="rating.avatar" width="28" height="28">
+            <div class="users">
+              <span class="names">{{rating.username}}</span>
+              <div class="star_content">
+                <star class="s_star" :size="36" :score="rating.score"></star>
+                <div class="s_content">{{rating.deliveryTime}}分钟送达</div>
+              </div>
             </div>
-          </div>
-          <div class="times">{{rating.rateTime | formatDate}}</div>
-          <div class="ratingtexts_icon">
-            <p class="ratingtexts">
-              {{rating.text}}
-            </p>
-            <div class="recommend" v-show="rating.recommend && rating.recommend.length ">
-              <span :class="{'icon-thumb_up':rating.rateType===0,'icon-thumb_down':rating.rateType===1}"></span>
-              <span class="item" v-for="item in rating.recommend">{{item}}</span>
+            <div class="times">{{rating.rateTime | formatDate}}</div>
+            <div class="ratingtexts_icon">
+              <p class="ratingtexts">
+                {{rating.text}}
+              </p>
+              <div class="recommend" v-show="rating.recommend && rating.recommend.length ">
+                <span :class="{'icon-thumb_up':rating.rateType===0,'icon-thumb_down':rating.rateType===1}"></span>
+                <span class="item" v-for="item in rating.recommend">{{item}}</span>
+              </div>
             </div>
-          </div>
-        </li>
-      </ul>
-      <div class="no-ratings" v-show="!ratings || !ratings.length">暂无评论喔~</div>
+          </li>
+        </ul>
+        <div class="no-ratings" v-show="!ratings || !ratings.length">暂无评论喔~</div>
+      </div>
     </div>
   </div>
 </template>
@@ -137,14 +139,14 @@
             margin-left 3px
           .star_content
             margin-bottom 6px
-           .s_star
-             display inline-block
-           .s_content
-             display inline-block
-             font-size 10px
-             font-weight 200
-             color gray
-             line-height 16px
+          .s_star
+            display inline-block
+          .s_content
+            display inline-block
+            font-size 10px
+            font-weight 200
+            color gray
+            line-height 16px
         .times
           position absolute
           top 12px
@@ -186,7 +188,7 @@
   const ERR_OK = 0;
   const ALL = 2;
 
-  export default{
+  export default {
     filters: {
       formatDate(time) {
         let date = new Date(time);
@@ -210,7 +212,7 @@
         }
       };
     },
-    created () {
+    created() {
       this.$http.get('api/ratings').then((response) => {
         response = response.body;
         if (response.errno === ERR_OK) {
