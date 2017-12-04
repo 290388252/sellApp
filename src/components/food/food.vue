@@ -32,7 +32,8 @@
         <split></split>
         <div class="ratings">
           <h1 class="title">商品评价</h1>
-          <ratingselect @toggle="toggleContent" @select="selectRatings" :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+          <ratingselect @toggle="toggleContent" @select="selectRatings" :selectType="selectType"
+                        :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
           <div class="rating-wrapper">
             <ul v-show="food.ratings && food.ratings.length">
               <li v-show="needShow(rating.rateType,rating.text)" class="rating-item" v-for="rating in food.ratings">
@@ -75,11 +76,11 @@
       width 100%
       height 50vh
       img
-       position absolute
-       top: 0
-       left 0
-       width: 100%
-       height: 100%
+        position absolute
+        top: 0
+        left 0
+        width: 100%
+        height: 100%
       .back
         position: absolute
         top: 20px
@@ -139,7 +140,7 @@
         &.fade-enter, &.fade-leave-active
           opacity: 0
           z-index -1
-    .info, .ratings
+    .info
       margin 18px 18px 18px 14px
       .text
         margin-left 8px
@@ -148,6 +149,9 @@
         font-weight 200
         color: rgb(77, 85, 93)
         line-height 21px
+    .ratings
+      position relative
+      margin 18px 18px 18px 14px
       .rating-wrapper
         padding-left 6px
         .rating-item
@@ -188,87 +192,87 @@
   import ratingselect from '../ratingselect/ratingselect.vue';
   import Vue from 'vue';
   const ALL = 2;
-//  const POSITIVE = 0;
-//  const NEGATIVE = 1;
-    export default {
-        filters: {
-          formatDate(time) {
-            let date = new Date(time);
-            return formatDate(date, 'yyyy-MM-dd hh:mm');
-          }
-        },
-        props: {
-            food: {
-                type: Object
-            }
-        },
-        data() {
-            return {
-                showFlag: false,
-                selectType: ALL,
-                onlyContent: true,
-                desc: {
-                  all: '全部',
-                  positive: '推荐',
-                  negative: '吐槽'
-                }
-            };
-        },
-        methods: {
-            show() {
-                this.showFlag = true;
-                this.selectType = ALL;
-                this.onlyContent = true;
-                this.$nextTick(() => {
-                   if (!this.scroll) {
-                       this.scroll = new BScroll(this.$refs.food, {
-                           click: true
-                       });
-                   } else {
-                       this.scroll.refresh();
-                   }
-                });
-            },
-            hide() {
-                this.showFlag = false;
-            },
-            addFirst(event) {
-                if (!event._constructed) {
-                    return;
-                }
-                this.$emit('add', event.target);
-                Vue.set(this.food, 'count', 1);
-              },
-              addFood(target) {
-               this.$emit('add', target);
-              },
-              selectRatings(type) {
-                this.selectType = type;
-                this.$nextTick(() => {
-                  this.scroll.refresh();
-                });
-              },
-              toggleContent() {
-                this.onlyContent = !this.onlyContent;
-                this.$nextTick(() => {
-                  this.scroll.refresh();
-                });
-              },
-              needShow(type, text) {
-                if (this.onlyContent && !text) {
-                    return false;
-                }
-                if (this.selectType === ALL) {
-                    return true;
-                } else {
-                    return type === this.selectType;
-                }
-              }
-        },
-        components: {
-            cartcontrol,
-            split,
-            ratingselect
+  //  const POSITIVE = 0;
+  //  const NEGATIVE = 1;
+  export default {
+    filters: {
+      formatDate(time) {
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm');
+      }
+    },
+    props: {
+      food: {
+        type: Object
+      }
+    },
+    data() {
+      return {
+        showFlag: false,
+        selectType: ALL,
+        onlyContent: true,
+        desc: {
+          all: '全部',
+          positive: '推荐',
+          negative: '吐槽'
         }
-    };
+      };
+    },
+    methods: {
+      show() {
+        this.showFlag = true;
+        this.selectType = ALL;
+        this.onlyContent = true;
+        this.$nextTick(() => {
+          if (!this.scroll) {
+            this.scroll = new BScroll(this.$refs.food, {
+              click: true
+            });
+          } else {
+            this.scroll.refresh();
+          }
+        });
+      },
+      hide() {
+        this.showFlag = false;
+      },
+      addFirst(event) {
+        if (!event._constructed) {
+          return;
+        }
+        this.$emit('add', event.target);
+        Vue.set(this.food, 'count', 1);
+      },
+      addFood(target) {
+        this.$emit('add', target);
+      },
+      selectRatings(type) {
+        this.selectType = type;
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        });
+      },
+      toggleContent() {
+        this.onlyContent = !this.onlyContent;
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        });
+      },
+      needShow(type, text) {
+        if (this.onlyContent && !text) {
+          return false;
+        }
+        if (this.selectType === ALL) {
+          return true;
+        } else {
+          return type === this.selectType;
+        }
+      }
+    },
+    components: {
+      cartcontrol,
+      split,
+      ratingselect
+    }
+  };
 </script>
