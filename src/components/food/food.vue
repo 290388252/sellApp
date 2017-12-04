@@ -30,7 +30,7 @@
           <p class="text">{{food.info}}</p>
         </div>
         <split></split>
-        <div class="ratings">
+        <div class="food_ratings">
           <h1 class="title">商品评价</h1>
           <ratingselect @toggle="toggleContent" @select="selectRatings" :selectType="selectType"
                         :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
@@ -149,7 +149,7 @@
         font-weight 200
         color: rgb(77, 85, 93)
         line-height 21px
-    .ratings
+    .food_ratings
       position relative
       margin 18px 18px 18px 14px
       .rating-wrapper
@@ -228,6 +228,7 @@
             this.scroll = new BScroll(this.$refs.food, {
               click: true
             });
+            console.log(this.scroll);
           } else {
             this.scroll.refresh();
           }
