@@ -12,30 +12,33 @@
         <router-link to="/seller">商家</router-link>
       </div>
     </div>
-    <router-view :seller="seller"></router-view>
+    <keep-alive>
+      <router-view :seller="seller"></router-view>
+    </keep-alive>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import header from './components/header/header.vue';
+
   const ERR_OK = 0;
-  export default{
-    data () {
-           return {
-             seller: {}
-           };
+  export default {
+    data() {
+      return {
+        seller: {}
+      };
     },
     created() {
-        this.$http.get('api/seller').then((response) => {
-            response = response.body;
-            console.log(response);
-            if (response.errno === ERR_OK) {
-                this.seller = response.data;
-                console.log(response.data);
-            }
-        });
+      this.$http.get('api/seller' + '?id' + this.seller.id).then((response) => {
+        response = response.body;
+        console.log(response);
+        if (response.errno === ERR_OK) {
+          this.seller = response.data;
+          console.log(response.data);
+        }
+      });
     },
-    components: { 'v-header': header }
+    components: {'v-header': header}
   };
 </script>
 
@@ -54,5 +57,5 @@
         display block
         font-style: 14px
       .active
-        color rgb(240,20,20)
+        color rgb(240, 20, 20)
 </style>
