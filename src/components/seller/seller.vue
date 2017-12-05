@@ -29,6 +29,10 @@
               </div>
             </li>
           </ul>
+          <div class="favorite" @click="toggleFavorite">
+            <span class="icon-favorite" :class="{'active':favorite}"></span>
+            <span class="text">{{favoriteText}}</span>
+          </div>
         </div>
         <split></split>
         <div class="bulletin">
@@ -46,13 +50,22 @@
         <split></split>
         <div class="pics">
           <div class="title">商家实景</div>
-          <div class="pic-wrapper">
-            <ul class="pic-list">
+          <div class="pic-wrapper" ref="picWrapper">
+            <ul class="pic-list" ref="picList">
               <li class="pic-item" v-for="pic in seller.pics">
                 <img :src="pic" width="120px" height="90" alt="">
               </li>
             </ul>
           </div>
+        </div>
+        <split></split>
+        <div class="infos">
+          <div class="title">商家信息</div>
+            <ul class="info-list">
+              <li class="info-item" v-for="info in seller.infos">
+                <span class="info">{{info}}</span>
+              </li>
+            </ul>
         </div>
       </div>
       </div>
@@ -106,6 +119,24 @@
             color: rgb(7, 17, 27)
             .stress
               font-size 24px
+      .favorite
+        position absolute
+        right 0
+        top 0
+        .icon-favorite
+          display block
+          text-align: center
+          font-size 24px
+          color: #d4d6d9
+          line-height 24px
+          &.active
+            color: rgb(240, 21, 21)
+        .text
+          display block
+          margin-top 4px
+          font-size 10px
+          color: rgb(77, 85, 93)
+          line-height 10px
     .bulletin
       margin 18px 18px 0 18px
       .title
@@ -152,7 +183,7 @@
             font-size 12px
             line-height 16px
     .pics
-      margin 18px 18px 0 18px
+      margin 18px 18px 18px 18px
       .title
         font-size 15px
         line-height 14px
@@ -169,6 +200,23 @@
             width 120px
             height 90px
 
+    .infos
+      padding 18px 18px 0 18px
+      .title
+        font-size 15px
+        line-height 14px
+        padding-bottom 12px
+      .info-list
+        margin-right 12px
+        margin-left 12px
+        padding-bottom 18px
+        .info-item
+          padding-top 16px
+          padding-bottom 16px
+          border-before-1px(rgba(7, 17, 27, .1))
+          .info
+            font-size 12px
+            color: rgb(7, 17, 27)
 </style>
 
 <script type="text/ecmascript-6">
@@ -176,13 +224,23 @@
   import split from '../split/split.vue';
   import BScroll from 'better-scroll';
   export default{
-      props: {
-          seller: {
-              type: Object
-          }
-      },
+    props: {
+        seller: {
+            type: Object
+        }
+    },
+    data() {
+        return {
+          favorite: false
+        }
+    },
     created() {
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
+    },
+    computed: {
+      favoriteText() {
+          return this.favorite ? '已收藏' : '未收藏';
+      }
     },
     components: {
       split,
@@ -191,6 +249,7 @@
     mounted() {
       this.$nextTick(() => {
           this._initScroll();
+          this._initPic();
       });
     },
     methods: {
@@ -208,7 +267,24 @@
               let picWidth = 120;
               let margin = 6;
               let width = (picWidth + margin) * this.seller.pics.length - margin;
+              this.$refs.picList.style.width = width + 'px';
+              this.$nextTick(() => {
+                if (!this.picScroll) {
+                    this.picScroll = new BScroll(this.$refs.picWrapper, {
+                        scrollX: true,
+                        eventPassthrough: 'vertical'
+                    });
+                } else {
+                    this.picScroll.refresh();
+                }
+              });
           }
+      },
+      toggleFavorite(event) {
+          if (!event._constructed) {
+              return;
+          }
+          this.favorite = !this.favorite;
       }
     }
   };
