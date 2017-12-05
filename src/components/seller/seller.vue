@@ -232,7 +232,7 @@
     data() {
         return {
           favorite: false
-        }
+        };
     },
     created() {
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
